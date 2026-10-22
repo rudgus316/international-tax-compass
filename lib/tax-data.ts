@@ -27,6 +27,7 @@ export type TaxValue = {
   country: Country;
   item: Item;
   rateType: RateType;
+  partnerCountry?: Country; // 조약(treaty)일 때만 필수: 기준 상대국. 한국 거주자 기준이라 항상 "KR"
   value: number; // 퍼센트 (예: 21은 21%)
   note?: string; // 조건 (예: 지분율 요건)
   source: TaxSource;
