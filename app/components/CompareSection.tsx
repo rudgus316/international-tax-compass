@@ -1,10 +1,20 @@
 "use client";
 
-// Design Ref: §2 — ② 비교하기. 국가 선택과 항목 선택을 만들었고, 비교표는 이후 작업에서 추가한다.
+// Design Ref: §2 — ② 비교하기. 국가 선택, 항목 선택, 비교표(값)를 만들었다.
+// 출처·기준일 표시와 예외 문구(자료 없음 등)는 이후 작업에서 표에 추가한다.
 // Plan SC: 4번째 국가를 고르려 하면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
 import { useState } from "react";
-import { COUNTRIES, COUNTRY_LABELS, ITEMS, ITEM_LABELS, type Country, type Item } from "@/lib/tax-data";
+import {
+  COUNTRIES,
+  COUNTRY_LABELS,
+  ITEMS,
+  ITEM_LABELS,
+  RATE_TYPE_LABELS,
+  getValues,
+  type Country,
+  type Item,
+} from "@/lib/tax-data";
 
 // 한 번에 비교할 수 있는 국가 수
 const MAX_COUNTRIES = 3;
@@ -16,6 +26,68 @@ function CheckboxCard({ label, checked, onChange }: { label: string; checked: bo
       <input type="checkbox" className="h-5 w-5 accent-blue-600" checked={checked} onChange={onChange} />
       <span>{label}</span>
     </label>
+  );
+}
+
+// 비교표: 가로는 고른 국가, 세로는 고른 항목. 한 칸에는 등록된 세율을 종류별로 한 줄씩 보여 준다.
+function CompareTable({ countries, items }: { countries: Country[]; items: Item[] }) {
+  if (countries.length === 0 || items.length === 0) {
+    return <p className="text-zinc-600 dark:text-zinc-400">국가와 항목을 선택하세요</p>;
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-lg border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+      <table className="w-full min-w-max border-collapse text-left">
+        <caption className="sr-only">국가별 조세 비교표</caption>
+        <thead>
+          <tr className="bg-zinc-100 dark:bg-zinc-800">
+            <th scope="col" className="border-b border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700">
+              항목
+            </th>
+            {countries.map((country) => (
+              <th
+                key={country}
+                scope="col"
+                className="border-b border-l border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700"
+              >
+                {COUNTRY_LABELS[country]}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {items.map((item) => (
+            <tr key={item}>
+              <th
+                scope="row"
+                className="border-t border-zinc-300 bg-zinc-50 px-4 py-3 align-top font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
+              >
+                {ITEM_LABELS[item]}
+              </th>
+              {countries.map((country) => {
+                const values = getValues(country, item);
+                return (
+                  <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
+                    {values.length === 0 ? (
+                      <span className="text-zinc-500 dark:text-zinc-400">—</span>
+                    ) : (
+                      <ul className="flex flex-col gap-2">
+                        {values.map((v) => (
+                          <li key={`${v.rateType}-${v.source.url}`} className="flex flex-col">
+                            <span className="text-xs text-zinc-600 dark:text-zinc-400">{RATE_TYPE_LABELS[v.rateType]}</span>
+                            <span className="text-lg font-semibold">{v.value}%</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
@@ -95,6 +167,11 @@ export default function CompareSection() {
           ))}
         </div>
       </fieldset>
+
+      <CompareTable
+        countries={COUNTRIES.filter((c) => selectedCountries.includes(c))}
+        items={ITEMS.filter((i) => selectedItems.includes(i))}
+      />
     </section>
   );
 }
