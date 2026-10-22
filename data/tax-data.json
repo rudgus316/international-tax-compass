@@ -1,0 +1,50 @@
+[
+  {
+    "country": "US",
+    "item": "corporate",
+    "rateType": "statutory",
+    "value": 21,
+    "note": "연방 법인세 단일세율. 2025년 Form 1120 안내서 기준이며, 2018년 이후 시작하는 과세연도에 적용",
+    "source": {
+      "org": "미국 국세청(IRS)",
+      "url": "https://www.irs.gov/instructions/i1120",
+      "asOf": "2025-01-01"
+    }
+  },
+  {
+    "country": "US",
+    "item": "dividend",
+    "rateType": "domestic",
+    "value": 30,
+    "note": "비거주 외국인에게 지급하는 미국 원천 배당. 조세조약이 있으면 더 낮은 조약 세율을 적용(IRS 안내: 30% or lesser tax treaty rate)",
+    "source": {
+      "org": "미국 국세청(IRS)",
+      "url": "https://www.irs.gov/individuals/international-taxpayers/federal-income-tax-withholding-and-reporting-on-other-kinds-of-us-source-income-paid-to-nonresident-aliens",
+      "asOf": "2026-07-23"
+    }
+  },
+  {
+    "country": "US",
+    "item": "interest",
+    "rateType": "domestic",
+    "value": 30,
+    "note": "비거주 외국인에게 지급하는 미국 원천 이자 중 비과세가 아닌 것. 미국 은행 예금이자는 미국 내 사업과 실질 관련이 없으면 비과세·보고 대상 아님. 조세조약이 있으면 더 낮은 조약 세율을 적용",
+    "source": {
+      "org": "미국 국세청(IRS)",
+      "url": "https://www.irs.gov/individuals/international-taxpayers/federal-income-tax-withholding-and-reporting-on-other-kinds-of-us-source-income-paid-to-nonresident-aliens",
+      "asOf": "2026-07-23"
+    }
+  },
+  {
+    "country": "US",
+    "item": "royalty",
+    "rateType": "domestic",
+    "value": 30,
+    "note": "비거주 외국인에게 지급하는 미국 원천 사용료. 조세조약이 있으면 더 낮은 조약 세율을 적용(IRS 안내: 30% or lesser tax treaty rate, if applicable)",
+    "source": {
+      "org": "미국 국세청(IRS)",
+      "url": "https://www.irs.gov/individuals/international-taxpayers/federal-income-tax-withholding-and-reporting-on-other-kinds-of-us-source-income-paid-to-nonresident-aliens",
+      "asOf": "2026-07-23"
+    }
+  }
+]
