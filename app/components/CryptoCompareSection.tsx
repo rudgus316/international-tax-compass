@@ -1,7 +1,7 @@
 "use client";
 
-// Design Ref: §11.1 — ③ 가상자산 비교. 이 작업(23번)은 국가 선택과 항목 선택, 구역 자리까지 만든다.
-// 비교표는 24번, 출처·상태 배지는 25번, 예외 안내는 26번에서 더한다.
+// Design Ref: §11.1 — ③ 가상자산 비교. 국가 선택, 항목 선택(23번)과 비교표(24번: 값은 크게, 조건 설명은 작게)를 만들었다.
+// 출처·기준일·상태 배지는 25번, 예외 안내는 26번에서 더한다.
 // Plan SC: 국가는 최대 3개, 4번째를 고르면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
 import { useState } from "react";
@@ -12,6 +12,7 @@ import {
   CRYPTO_COUNTRY_LABELS,
   CRYPTO_TOPICS,
   CRYPTO_TOPIC_LABELS,
+  getCryptoRules,
   getCryptoSupportedList,
   type CryptoCountry,
   type CryptoTopic,
@@ -22,6 +23,72 @@ const MAX_COUNTRIES = 3;
 
 // 지원하는 국가와 항목 목록 (안내 문구용)
 const SUPPORTED = getCryptoSupportedList();
+
+// 비교표: 가로는 고른 국가, 세로는 고른 항목. 한 칸에는 등록된 규정을 한 건씩 보여 준다.
+// 값(headline)은 크게, 조건 설명(detail)은 작게 보여 준다.
+function CryptoTable({ countries, topics }: { countries: CryptoCountry[]; topics: CryptoTopic[] }) {
+  if (countries.length === 0 || topics.length === 0) {
+    return <p className="text-zinc-600 dark:text-zinc-400">국가와 항목을 선택하세요</p>;
+  }
+
+  return (
+    <div className="relative overflow-x-auto rounded-lg border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+      <table className="w-full min-w-max border-collapse text-left">
+        <caption className="sr-only">국가별 가상자산 조세 비교표</caption>
+        <thead>
+          <tr className="bg-zinc-100 dark:bg-zinc-800">
+            <th scope="col" className="border-b border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700">
+              항목
+            </th>
+            {countries.map((country) => (
+              <th
+                key={country}
+                scope="col"
+                className="border-b border-l border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700"
+              >
+                {CRYPTO_COUNTRY_LABELS[country]}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {topics.map((topic) => (
+            <tr key={topic}>
+              <th
+                scope="row"
+                className="border-t border-zinc-300 bg-zinc-50 px-4 py-3 align-top font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
+              >
+                {CRYPTO_TOPIC_LABELS[topic]}
+              </th>
+              {countries.map((country) => {
+                const rules = getCryptoRules(country, topic);
+                return (
+                  <td
+                    key={country}
+                    className="max-w-72 border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700"
+                  >
+                    {rules.length === 0 ? (
+                      <span className="text-zinc-600 dark:text-zinc-400">해당 자료를 찾지 못했습니다</span>
+                    ) : (
+                      <ul className="flex flex-col gap-3">
+                        {rules.map((rule) => (
+                          <li key={`${rule.status}-${rule.source.url}-${rule.headline}`} className="flex flex-col gap-1">
+                            <span className="text-lg font-semibold">{rule.headline}</span>
+                            <span className="text-sm leading-6 text-zinc-700 dark:text-zinc-300">{rule.detail}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export default function CryptoCompareSection() {
   const [selectedCountries, setSelectedCountries] = useState<CryptoCountry[]>([]);
@@ -111,12 +178,7 @@ export default function CryptoCompareSection() {
         </div>
       </fieldset>
 
-      {/* 비교표 자리: 24번에서 표로 바꾼다 */}
-      <p role="status" className="text-zinc-600 dark:text-zinc-400">
-        {countries.length === 0 || topics.length === 0
-          ? "국가와 항목을 선택하세요"
-          : `${countries.map((c) => CRYPTO_COUNTRY_LABELS[c]).join(", ")} · ${topics.length}개 항목을 골랐습니다. 비교표는 다음 단계에서 보여 드립니다.`}
-      </p>
+      <CryptoTable countries={countries} topics={topics} />
     </section>
   );
 }
