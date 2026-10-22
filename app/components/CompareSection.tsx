@@ -6,6 +6,7 @@
 // Plan SC: 4번째 국가를 고르려 하면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
 import { useState } from "react";
+import CheckboxCard from "./CheckboxCard";
 import { buildCompareCsv, csvFileName } from "@/lib/csv";
 import {
   COUNTRIES,
@@ -27,16 +28,6 @@ const MAX_COUNTRIES = 3;
 
 // 지원하는 국가와 항목 목록 (안내 문구용)
 const SUPPORTED = getSupportedList();
-
-// 체크박스 한 칸 (국가와 항목 선택이 같은 모양을 쓴다)
-function CheckboxCard({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
-  return (
-    <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue-600 dark:border-zinc-700 dark:bg-zinc-900 dark:has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-950">
-      <input type="checkbox" className="h-5 w-5 accent-blue-600" checked={checked} onChange={onChange} />
-      <span>{label}</span>
-    </label>
-  );
-}
 
 // 지금 보이는 비교표를 CSV 파일로 내려받는다. 엑셀에서 한글이 깨지지 않도록 맨 앞에 BOM(﻿)을 붙인다.
 function downloadCsv(countries: Country[], items: Item[]) {
