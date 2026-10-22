@@ -302,7 +302,7 @@ export default function CompareSection() {
           </span>
         </legend>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+        <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:grid-cols-5">
           {ITEMS.map((item) => (
             <CheckboxCard
               key={item}
