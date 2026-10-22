@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 국제조세 나침반
 
-## Getting Started
+해외에 진출했거나 진출을 준비하는 기업의 세무·재무 담당자가, 주요국의 조세 정보를 **출처와 함께 나란히 비교**하고 **문장으로 물어볼 수 있는** 웹 앱입니다.
 
-First, run the development server:
+> 참고용 서비스입니다. 세무 자문이 아니며, 세액 계산과 절세 자문은 제공하지 않습니다.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 무엇을 하나요
+
+**1. 국가별 조세 비교표**
+- 국가를 최대 3개까지 고르고 항목을 선택하면 한 표에서 비교합니다.
+- 세율 항목(6개국: 한국·미국·일본·영국·독일·프랑스): 법인세율(최고세율, 지방세 포함 합산), 배당·이자·로열티 원천세율(국내법, 한국 거주자 기준 조세조약)
+- 가상자산 항목(10개국: 위 6개국 + 싱가포르·호주·캐나다·스위스, 개인 거주자 기준): 세율, 기본공제, 소득 구분(종합·분류·분리과세), 손실 이월공제, 보유기간 우대, 채굴·스테이킹, 증여·상속, 거래소 정보 보고
+- **모든 값에 출처(기관명·링크·기준일)** 를 붙이고, 기준일이 1년 넘으면 "오래된 자료", 가상자산 규정에는 "시행 중 / 시행 예정 / 논의 중" 상태를 표시합니다.
+- 자료가 없는 칸은 지어내지 않고 "해당 자료를 찾지 못했습니다"로 표시합니다.
+- 비교표를 엑셀(CSV)로 내려받을 수 있습니다.
+
+**2. 질문 검색 (AI 답변)**
+- "미국과 일본의 배당 원천세율 차이는?", "독일은 가상자산을 1년 보유하면 세금이 없나?"처럼 문장으로 물으면, **등록된 자료 안에서만** 출처와 함께 500자 이내로 답합니다.
+- 자료에 없으면 "해당 자료를 찾지 못했습니다", 지원하지 않는 국가·항목은 지원 목록과 함께 안내합니다.
+- 세액 계산·절세 요청, 투자 권유·"어느 나라가 유리한가" 질문은 답하지 않습니다.
+- 개인정보(주민등록번호, 이메일, 전화번호, 가상자산 지갑 주소) 패턴이 보이면 AI로 보내기 전에 막습니다. 질문은 저장하지 않습니다.
+
+## 기술 스택
+
+- Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4
+- 답변 생성: OpenAI API(서버 코드에서만 호출, 새 패키지 없이 `fetch` 사용)
+- 배포: Vercel
+
+## 폴더 구조
+
+```
+app/            화면(page.tsx, components/)과 서버 코드(api/ask/route.ts)
+lib/            자료 모양·검사·조회(tax-data, crypto-data), 질문 처리(ask, crypto-ask), OpenAI 호출(openai),
+                개인정보 검사(pii), 요청 검사(request-guard), CSV(csv)
+data/           등록한 조세 자료(tax-data.json 43건, crypto-data.json 41건)와 정답률 채점 질문(eval-questions.json 40개)
+scripts/        정답률 채점(eval.mjs)
+PRD.md          기획서
+PLAN.md         개발 계획 (작업 1~32번)
+DESIGN.md       설계 문서
+references/     참고 자료 메모(국제조세조정에 관한 법률 정리)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 실행 방법
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev        # http://localhost:3000
+npm run lint       # 코드 검사
+npm run build      # 배포용 빌드
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+질문 검색(AI 답변)을 쓰려면 프로젝트 폴더에 `.env` 파일을 만들고 OpenAI 키를 넣습니다. (`.env`는 `.gitignore`에 등록돼 저장소에 올라가지 않습니다.)
 
-## Learn More
+```
+OPENAI_API_KEY=여기에_키
+# OPENAI_MODEL=gpt-4.1-mini   (선택)
+```
 
-To learn more about Next.js, take a look at the following resources:
+정답률 채점(개발 서버를 `npm run dev -- -p 3100`으로 띄운 상태에서):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+node scripts/eval.mjs --runs 3             # 세율 20개 + 가상자산 20개
+node scripts/eval.mjs --set crypto --runs 3
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 자료와 한계
 
-## Deploy on Vercel
+- 공개 자료만 사용합니다. 자료는 직접 정리해 등록했으며(크롤링·실시간 갱신 없음) 대부분 PwC Worldwide Tax Summaries와 PwC Global Crypto Tax Report 2026 같은 **2차 자료**이고, 일부는 IRS·국세청 안내 페이지 등입니다. 법령 원문과 대조하지 못한 값이 있어 값마다 출처와 기준일을 적었습니다.
+- 가상자산 세법은 자주 바뀌고 시행이 미뤄지기도 합니다. 값마다 상태와 기준일을 확인하세요. 프랑스 가상자산 등 일부 칸은 공식 자료를 확인하지 못해 "자료 없음"입니다.
+- 질문 내용은 AI 서비스(OpenAI)로 전송됩니다. 회사 기밀이나 개인정보는 입력하지 마세요.
+- 로그인, 검색 기록 저장, 개인정보 수집은 하지 않습니다.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 문서
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [PRD.md](PRD.md): 서비스 기획서 (1~9장 세율 비교와 질문 검색, 10장 가상자산 비교)
+- [PLAN.md](PLAN.md): 개발 계획과 작업 목록
+- [DESIGN.md](DESIGN.md): 화면·데이터 흐름·기술 설계
