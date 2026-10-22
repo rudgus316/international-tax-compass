@@ -322,5 +322,185 @@
       "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
       "asOf": "2025-10-01"
     }
+  },
+  {
+    "country": "SG",
+    "topic": "taxType",
+    "headline": "자본·수익 성격에 따라 판단",
+    "detail": "싱가포르 세무당국(IRAS)의 안내(법적 구속력 없음)에 따르면 가상자산(디지털 토큰) 처분 손익은 그 성격이 자본(capital)인지 수익(revenue)인지에 따라 과세 여부가 달라진다. 전용 세법은 없고 일반 소득세 원칙을 적용한다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "SG",
+    "topic": "miningStaking",
+    "headline": "이익 목적의 채굴이면 과세",
+    "detail": "채굴로 받은 결제용 토큰을 처분해 얻은 이익은, 채굴을 이익을 얻을 의도로 했는지에 따라 과세 여부가 달라진다. 스테이킹은 이 자료에 언급이 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "SG",
+    "topic": "reporting",
+    "headline": "CARF 2027~2028년까지 교환 시작 예상",
+    "detail": "일반 신고 의무가 적용되며 IRAS는 거래 기록(거래일, 수량, 거래 시점 가치 등)을 보관해 요청 시 제출하라고 안내한다. 2024-11-26 OECD 가상자산 보고 체계(CARF) 이행을 약속했고 늦어도 2027년 또는 2028년까지 정보 교환을 시작할 것으로 예상되나, IRAS는 아직 이행 지침을 내지 않았다.",
+    "status": "proposed",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "AU",
+    "topic": "taxType",
+    "headline": "자본이득세 자산 또는 수익 자산",
+    "detail": "호주 세무당국(ATO)은 가상자산을 통화가 아닌 재산으로 보고, 보유 의도에 따라 자본이득세(CGT) 자산 또는 주식·부동산 같은 수익 자산으로 본다. 가상자산 전용 소득세법은 없고(2025-03 정부가 전용 입법 불필요로 답변) 소득세 신고서에 자본 또는 수익 계정으로 손익을 신고한다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "AU",
+    "topic": "rate",
+    "headline": "개인 한계세율(조건에 따라 다름)",
+    "detail": "투자·거래 목적이 단기 차익이라 수익 계정으로 보면 이익은 일반소득으로 개인의 한계 소득세율이 적용된다. 자본 계정으로 보유하면 CGT 사건으로 과세한다. 구체적인 세율 구간은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "AU",
+    "topic": "allowance",
+    "headline": "조건에 따라 다름",
+    "detail": "취미로 보유한 가상자산은 가치가 AUD 10,000 이하인 '개인 사용 자산'임을 입증하면 처분 시 양도소득세 대상에서 빠질 수 있다. 장기 투자 의도를 입증하기 어려워 수익 계정으로 추정될 가능성이 크다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "AU",
+    "topic": "holdingPeriod",
+    "headline": "12개월 초과 보유 시 50% 감면(조건부)",
+    "detail": "자본 계정으로 보유한 가상자산을 개인이나 신탁이 12개월을 넘겨 보유하면 과세되는 양도차익의 50%를 감면받을 수 있다. 다만 수익 계정으로 보는 경우에는 이 감면이 적용되지 않으며, ATO가 투자·거래를 수익 계정으로 볼 가능성이 크다고 한다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CA",
+    "topic": "taxType",
+    "headline": "사업소득 또는 자본이득",
+    "detail": "캐나다 국세청(CRA)은 가상자산을 금·은 같은 상품(commodity)처럼 취급한다. 거래 소득은 상황에 따라 사업소득 또는 자본이득이 된다. 가상자산 전용 연방·주 세법은 없고 CRA의 2020년 안내가 유일한 공식 입장이다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CA",
+    "topic": "rate",
+    "headline": "조건에 따라 다름",
+    "detail": "사업소득이면 일반 소득세 규정을 따른다. 자본이득이면 처분 이익을 절반으로 줄여 과세하는 우대가 있다. 구체적인 세율은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CA",
+    "topic": "miningStaking",
+    "headline": "사업 성격이면 사업소득 과세",
+    "detail": "채굴 소득은 활동의 수준과 성격에 따라 달라진다. 상업적·사업적 성격이 충분하면 사업 활동으로 보아 사업소득으로 과세한다. 스테이킹은 이 자료에 언급이 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CA",
+    "topic": "reporting",
+    "headline": "해외 자산 100,000 초과 시 T1135 신고",
+    "detail": "가상자산 거래는 연간 소득세 신고서에 신고한다. 해외에 둔 특정 해외 재산의 취득원가가 연중 한 시점이라도 100,000(캐나다 달러)을 넘으면 T1135 서식으로 신고해야 하며, 서버가 해외에 있는 핫월렛은 대상이 될 가능성이 크다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CA",
+    "topic": "reporting",
+    "headline": "CARF 초안 단계(2026년 시행 목표)",
+    "detail": "2025-08-15 재무부가 OECD 가상자산 보고 체계(CARF)에 맞춘 소득세법 제21부 초안을 냈다. 초안대로 채택되면 2026년 1월 1일부터 적용되고 첫 보고는 2027년이다. 이 자료 작성 시점에는 최종 확정되지 않았다.",
+    "status": "proposed",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CH",
+    "topic": "taxType",
+    "headline": "전용 세법 없음, 순자산세 대상",
+    "detail": "가상자산 전용 세법은 없고 기존 세법을 적용한다. 개인이 연간 소득세 신고서를 제출하며, 모든 칸톤이 토큰 보유를 포함한 전 세계 순자산에 순자산세를 부과한다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CH",
+    "topic": "rate",
+    "headline": "개인 양도차익 비과세(원칙)",
+    "detail": "개인의 사적 동산(주식·토큰 등) 양도차익은 전문 증권 거래업자로 분류되지 않는 한 원칙적으로 소득세를 내지 않는다. 구체적인 세율은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "CH",
+    "topic": "reporting",
+    "headline": "CARF 시행 2027년으로 미뤄질 전망",
+    "detail": "2025년 가을 연방의회가 다자간 협정과 이행 규정을 채택했으나, 2025년 11월 초 주 의회 경제위원회가 74개국과의 정보 교환 개시 승인을 미뤘다. 이에 따라 2027년 1월 1일로 미뤄질 것으로 추정되며 공식 확인은 아직 없다.",
+    "status": "proposed",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
   }
 ]
