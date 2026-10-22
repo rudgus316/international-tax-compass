@@ -10,6 +10,7 @@ import { useState } from "react";
 import CheckboxCard from "./CheckboxCard";
 import CryptoRuleList from "./CryptoRuleList";
 import {
+  CORE_CRYPTO_TOPICS,
   CRYPTO_COUNTRIES,
   CRYPTO_COUNTRY_LABELS,
   CRYPTO_TOPICS,
@@ -224,6 +225,8 @@ function CompareTable({
 export default function CompareSection() {
   const [selectedCountries, setSelectedCountries] = useState<CryptoCountry[]>([]);
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+  // 가상자산은 세율 항목과 같은 줄의 항목 하나로 두고, 켜면 세부 항목(세율·기본공제·소득 구분 등)을 고른다
+  const [cryptoOn, setCryptoOn] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState<CryptoTopic[]>([]);
   const [notice, setNotice] = useState("");
 
@@ -246,6 +249,12 @@ export default function CompareSection() {
   // 항목은 개수 제한 없이 여러 개를 고를 수 있다
   function toggleItem(item: Item) {
     setSelectedItems(selectedItems.includes(item) ? selectedItems.filter((i) => i !== item) : [...selectedItems, item]);
+  }
+
+  // 가상자산을 처음 켜면 핵심 4개(세율, 기본공제, 소득 구분, 손실 이월공제)를 미리 골라 둔다
+  function toggleCrypto() {
+    if (!cryptoOn && selectedTopics.length === 0) setSelectedTopics([...CORE_CRYPTO_TOPICS]);
+    setCryptoOn(!cryptoOn);
   }
 
   function toggleTopic(topic: CryptoTopic) {
@@ -297,12 +306,11 @@ export default function CompareSection() {
         <legend className="mb-1 text-base font-medium">
           항목 선택 (여러 개 선택 가능){" "}
           <span className="text-sm font-normal text-zinc-600 dark:text-zinc-400">
-            {selectedItems.length + selectedTopics.length}개 선택
+            {selectedItems.length + (cryptoOn ? selectedTopics.length : 0)}개 선택
           </span>
         </legend>
 
-        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">세율</p>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
           {ITEMS.map((item) => (
             <CheckboxCard
               key={item}
@@ -311,30 +319,36 @@ export default function CompareSection() {
               onChange={() => toggleItem(item)}
             />
           ))}
+          <CheckboxCard label="가상자산" checked={cryptoOn} onChange={toggleCrypto} />
         </div>
 
-        <p className="mt-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-          가상자산{" "}
-          <span className="font-normal text-zinc-600 dark:text-zinc-400">
-            (개인 거주자 기준, 세법은 자주 바뀌니 기준일과 상태를 확인하세요. 투자 권유가 아닙니다)
-          </span>
-        </p>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {CRYPTO_TOPICS.map((topic) => (
-            <CheckboxCard
-              key={topic}
-              label={CRYPTO_TOPIC_LABELS[topic]}
-              checked={selectedTopics.includes(topic)}
-              onChange={() => toggleTopic(topic)}
-            />
-          ))}
-        </div>
+        {/* 가상자산을 고르면 세부 항목을 체크해서 비교한다 */}
+        {cryptoOn && (
+          <div className="flex flex-col gap-3 rounded-lg border border-zinc-300 bg-zinc-50 p-4 dark:border-zinc-700 dark:bg-zinc-900/50">
+            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              가상자산 세부 항목{" "}
+              <span className="font-normal text-zinc-600 dark:text-zinc-400">
+                (개인 거주자 기준, 세법은 자주 바뀌니 기준일과 상태를 확인하세요. 투자 권유가 아닙니다)
+              </span>
+            </p>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              {CRYPTO_TOPICS.map((topic) => (
+                <CheckboxCard
+                  key={topic}
+                  label={CRYPTO_TOPIC_LABELS[topic]}
+                  checked={selectedTopics.includes(topic)}
+                  onChange={() => toggleTopic(topic)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </fieldset>
 
       <CompareTable
         countries={CRYPTO_COUNTRIES.filter((c) => selectedCountries.includes(c))}
         items={ITEMS.filter((i) => selectedItems.includes(i))}
-        topics={CRYPTO_TOPICS.filter((t) => selectedTopics.includes(t))}
+        topics={cryptoOn ? CRYPTO_TOPICS.filter((t) => selectedTopics.includes(t)) : []}
       />
     </section>
   );
