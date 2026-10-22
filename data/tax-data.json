@@ -142,5 +142,107 @@
       "url": "https://taxsummaries.pwc.com/japan/corporate/withholding-taxes",
       "asOf": "2026-08-07"
     }
+  },
+  {
+    "country": "KR",
+    "item": "corporate",
+    "rateType": "combined",
+    "value": 27.5,
+    "note": "최고 과세표준 구간(3,000억원 초과) 기준 계산값: 법인세 25% + 지방소득세 2.5%(법인세의 10%). 해당 자료는 합산 세율을 직접 제시하지 않고 두 세율을 따로 제시함",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/republic-of-korea/corporate/taxes-on-corporate-income",
+      "asOf": "2026-06-04"
+    }
+  },
+  {
+    "country": "JP",
+    "item": "corporate",
+    "rateType": "combined",
+    "value": 31.52,
+    "note": "도쿄 기준 실효 합산 세율(법인세·지방법인세·사업세·주민세). 자본금 1억엔 초과 법인이며, 가치 기준·자본 기준 사업세는 제외",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/japan/corporate/taxes-on-corporate-income",
+      "asOf": "2026-08-07"
+    }
+  },
+  {
+    "country": "US",
+    "item": "dividend",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 15,
+    "note": "한국 거주자가 미국 법인에서 받는 배당의 조세조약 일반 세율. 직접 배당 세율은 10%이나 해당 자료는 적용 지분율 요건을 제시하지 않음",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/united-states/corporate/withholding-taxes",
+      "asOf": "2026-09-04"
+    }
+  },
+  {
+    "country": "US",
+    "item": "interest",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 12,
+    "note": "한국 거주자가 미국 채무자에게서 받는 이자의 조세조약 세율(일반)",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/united-states/corporate/withholding-taxes",
+      "asOf": "2026-09-04"
+    }
+  },
+  {
+    "country": "US",
+    "item": "royalty",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 15,
+    "note": "한국 거주자가 받는 사용료의 조세조약 세율은 유형별로 다름: 노하우·기타 산업 사용료 15%, 특허 15%, 영화·TV 10%, 저작권 10%, 산업설비 사용료는 사업소득 조항 적용(해당 자료 표기 NA). 값은 가장 높은 세율을 기재",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/united-states/corporate/withholding-taxes",
+      "asOf": "2026-09-04"
+    }
+  },
+  {
+    "country": "JP",
+    "item": "dividend",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 15,
+    "note": "한국 거주자가 일본 법인에서 받는 배당의 조세조약 일반(소액 지분) 세율. 법인 주주의 실질 지분 보유 시 5%(해당 자료의 열 제목 위치로 구분했고 지분율 요건은 제시하지 않음)",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/japan/corporate/withholding-taxes",
+      "asOf": "2026-08-07"
+    }
+  },
+  {
+    "country": "JP",
+    "item": "interest",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 10,
+    "note": "한국 거주자가 일본에서 받는 이자의 조세조약 세율. 수취인이 정부기관·금융기관이면 더 낮은 세율이 적용될 수 있으나 해당 자료는 한국에 대해 명시하지 않음",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/japan/corporate/withholding-taxes",
+      "asOf": "2026-08-07"
+    }
+  },
+  {
+    "country": "JP",
+    "item": "royalty",
+    "rateType": "treaty",
+    "partnerCountry": "KR",
+    "value": 10,
+    "note": "한국 거주자가 일본에서 받는 사용료의 조세조약 세율",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/japan/corporate/withholding-taxes",
+      "asOf": "2026-08-07"
+    }
   }
 ]
