@@ -31,7 +31,6 @@ import {
   isNotApplicable,
   isOutdated,
   isSupportedCountry,
-  type Country,
   type Item,
 } from "@/lib/tax-data";
 
@@ -43,9 +42,9 @@ const SUPPORTED = getSupportedList();
 const CRYPTO_SUPPORTED = getCryptoSupportedList();
 
 // 지금 보이는 비교표를 CSV 파일로 내려받는다. 엑셀에서 한글이 깨지지 않도록 맨 앞에 BOM(﻿)을 붙인다.
-function downloadCsv(countries: Country[], items: Item[]) {
+function downloadCsv(countries: CryptoCountry[], items: Item[], topics: CryptoTopic[]) {
   const today = new Date();
-  const blob = new Blob([`﻿${buildCompareCsv(countries, items, today)}`], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob([`﻿${buildCompareCsv(countries, items, today, topics)}`], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -71,9 +70,6 @@ function CompareTable({
     return <p className="text-zinc-600 dark:text-zinc-400">국가와 항목을 선택하세요</p>;
   }
 
-  // CSV에는 세율 항목만 담는다 (세율 비교를 지원하는 국가만)
-  const taxCountries = countries.filter(isSupportedCountry);
-  const canDownload = taxCountries.length > 0 && items.length > 0;
 
   return (
     <div className="flex flex-col gap-3">
@@ -89,13 +85,9 @@ function CompareTable({
         </p>
       )}
       <div className="flex items-center justify-end gap-3">
-        {topics.length > 0 && canDownload && (
-          <p className="text-xs text-zinc-600 dark:text-zinc-400">가상자산 항목은 CSV에 포함되지 않습니다</p>
-        )}
         <button
           type="button"
-          hidden={!canDownload}
-          onClick={() => downloadCsv(taxCountries, items)}
+          onClick={() => downloadCsv(countries, items, topics)}
           className="min-h-12 rounded-lg border border-blue-700 bg-white px-5 py-2 font-medium text-blue-800 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-blue-400 dark:bg-zinc-900 dark:text-blue-200 dark:hover:bg-blue-950"
         >
           엑셀(CSV)로 내려받기
