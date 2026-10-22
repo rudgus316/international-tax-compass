@@ -76,6 +76,17 @@ function CompareTable({
 
   return (
     <div className="flex flex-col gap-3">
+      {/* 가상자산 항목이 표에 있을 때는 표 바로 위에 주의 문구를 둔다 (값은 바뀌거나 시행이 미뤄질 수 있다) */}
+      {topics.length > 0 && (
+        <p
+          role="note"
+          className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-100"
+        >
+          <span aria-hidden="true">⚠ </span>
+          가상자산 세법은 자주 바뀝니다. 값마다 상태(시행 중·시행 예정·논의 중)와 기준일을 확인하세요. 개인 거주자 기준이며
+          투자 권유가 아닙니다.
+        </p>
+      )}
       <div className="flex items-center justify-end gap-3">
         {topics.length > 0 && canDownload && (
           <p className="text-xs text-zinc-600 dark:text-zinc-400">가상자산 항목은 CSV에 포함되지 않습니다</p>
