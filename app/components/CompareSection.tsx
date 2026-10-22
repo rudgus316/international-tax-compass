@@ -31,7 +31,7 @@ const SUPPORTED = getSupportedList();
 // 체크박스 한 칸 (국가와 항목 선택이 같은 모양을 쓴다)
 function CheckboxCard({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
   return (
-    <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg border border-zinc-300 bg-white px-4 py-2 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue-600 dark:border-zinc-700 dark:bg-zinc-900 dark:has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-950">
+    <label className="flex min-h-12 cursor-pointer items-center gap-2 rounded-lg border border-zinc-300 bg-white px-3 py-2 break-keep sm:gap-3 sm:px-4 has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue-600 dark:border-zinc-700 dark:bg-zinc-900 dark:has-[:checked]:border-blue-400 dark:has-[:checked]:bg-blue-950">
       <input type="checkbox" className="h-5 w-5 accent-blue-600" checked={checked} onChange={onChange} />
       <span>{label}</span>
     </label>
@@ -231,7 +231,7 @@ export default function CompareSection() {
           </span>
         </legend>
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2 sm:grid-cols-4">
           {ITEMS.map((item) => (
             <CheckboxCard
               key={item}

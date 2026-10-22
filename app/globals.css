@@ -19,6 +19,47 @@
   }
 }
 
+/* 세계지도: 국가 표시가 퍼져 나가는 움직임과, 나라 사이 곡선이 흐르는 움직임 */
+@keyframes map-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  70%,
+  100% {
+    transform: scale(3.4);
+    opacity: 0;
+  }
+}
+
+@keyframes map-flow {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.map-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: map-pulse 2.8s ease-out infinite;
+}
+
+.map-arc {
+  animation: map-flow 2.4s linear infinite;
+}
+
+/* 움직임을 줄여 달라는 설정을 켠 사용자에게는 움직임을 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  .map-pulse {
+    animation: none;
+    opacity: 0.4;
+  }
+
+  .map-arc {
+    animation: none;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
