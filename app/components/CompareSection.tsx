@@ -1,16 +1,26 @@
 "use client";
 
 // Design Ref: §2 — ② 비교하기. 국가 선택, 항목 선택, 비교표(값, 출처, 기준일, 오래된 자료 표시)를 만들었다.
-// 예외 처리: 자료 없음, 자료 간 차이 있음, 한국 조약 세율 해당 없음, 지원 범위 안내.
+// 가상자산(2차 사이클)은 따로 구역을 두지 않고, 같은 국가 선택과 같은 항목 선택·같은 비교표에 항목으로 넣었다.
+// 예외 처리: 자료 없음, 자료 간 차이 있음, 한국 조약 세율 해당 없음, 지원 범위 안내(세율 항목은 6개국만).
 // Plan SC: 모든 값에 출처(기관명·URL·기준일)를 붙인다. 기준일이 1년 넘은 값에는 "오래된 자료"를 표시한다.
 // Plan SC: 4번째 국가를 고르려 하면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
 import { useState } from "react";
 import CheckboxCard from "./CheckboxCard";
+import CryptoRuleList from "./CryptoRuleList";
+import {
+  CRYPTO_COUNTRIES,
+  CRYPTO_COUNTRY_LABELS,
+  CRYPTO_TOPICS,
+  CRYPTO_TOPIC_LABELS,
+  getCryptoRules,
+  getCryptoSupportedList,
+  type CryptoCountry,
+  type CryptoTopic,
+} from "@/lib/crypto-data";
 import { buildCompareCsv, csvFileName } from "@/lib/csv";
 import {
-  COUNTRIES,
-  COUNTRY_LABELS,
   ITEMS,
   ITEM_LABELS,
   RATE_TYPE_LABELS,
@@ -19,6 +29,7 @@ import {
   hasConflict,
   isNotApplicable,
   isOutdated,
+  isSupportedCountry,
   type Country,
   type Item,
 } from "@/lib/tax-data";
@@ -28,6 +39,7 @@ const MAX_COUNTRIES = 3;
 
 // 지원하는 국가와 항목 목록 (안내 문구용)
 const SUPPORTED = getSupportedList();
+const CRYPTO_SUPPORTED = getCryptoSupportedList();
 
 // 지금 보이는 비교표를 CSV 파일로 내려받는다. 엑셀에서 한글이 깨지지 않도록 맨 앞에 BOM(﻿)을 붙인다.
 function downloadCsv(countries: Country[], items: Item[]) {
@@ -44,18 +56,34 @@ function downloadCsv(countries: Country[], items: Item[]) {
   setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-// 비교표: 가로는 고른 국가, 세로는 고른 항목. 한 칸에는 등록된 세율을 종류별로 한 줄씩 보여 준다.
-function CompareTable({ countries, items }: { countries: Country[]; items: Item[] }) {
-  if (countries.length === 0 || items.length === 0) {
+// 비교표: 가로는 고른 국가, 세로는 고른 항목(세율 항목 다음에 가상자산 항목). 한 칸에는 등록된 값을 한 건씩 보여 준다.
+function CompareTable({
+  countries,
+  items,
+  topics,
+}: {
+  countries: CryptoCountry[];
+  items: Item[];
+  topics: CryptoTopic[];
+}) {
+  if (countries.length === 0 || items.length + topics.length === 0) {
     return <p className="text-zinc-600 dark:text-zinc-400">국가와 항목을 선택하세요</p>;
   }
 
+  // CSV에는 세율 항목만 담는다 (세율 비교를 지원하는 국가만)
+  const taxCountries = countries.filter(isSupportedCountry);
+  const canDownload = taxCountries.length > 0 && items.length > 0;
+
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-3">
+        {topics.length > 0 && canDownload && (
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">가상자산 항목은 CSV에 포함되지 않습니다</p>
+        )}
         <button
           type="button"
-          onClick={() => downloadCsv(countries, items)}
+          hidden={!canDownload}
+          onClick={() => downloadCsv(taxCountries, items)}
           className="min-h-12 rounded-lg border border-blue-700 bg-white px-5 py-2 font-medium text-blue-800 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-blue-400 dark:bg-zinc-900 dark:text-blue-200 dark:hover:bg-blue-950"
         >
           엑셀(CSV)로 내려받기
@@ -75,7 +103,7 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
                   scope="col"
                   className="border-b border-l border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700"
                 >
-                  {COUNTRY_LABELS[country]}
+                  {CRYPTO_COUNTRY_LABELS[country]}
                 </th>
               ))}
             </tr>
@@ -90,6 +118,16 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
                   {ITEM_LABELS[item]}
                 </th>
                 {countries.map((country) => {
+                  // 세율 비교는 6개국만 지원한다 (싱가포르·호주·캐나다·스위스는 가상자산 항목만)
+                  if (!isSupportedCountry(country)) {
+                    return (
+                      <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
+                        <span className="text-zinc-600 dark:text-zinc-400">
+                          현재 지원하지 않습니다 (세율 항목은 {SUPPORTED.countries.map((c) => c.label).join(", ")}만 지원)
+                        </span>
+                      </td>
+                    );
+                  }
                   const values = getValues(country, item);
                   // 한국의 조세조약 세율은 기준국이라 만들지 않는다 (원천세율 항목에서만 안내)
                   const treatyNotApplicable = item !== "corporate" && isNotApplicable(country, "treaty");
@@ -142,6 +180,29 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
                 })}
               </tr>
             ))}
+            {topics.map((topic) => (
+              <tr key={topic}>
+                <th
+                  scope="row"
+                  className="border-t border-zinc-300 bg-zinc-50 px-4 py-3 align-top font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
+                >
+                  {CRYPTO_TOPIC_LABELS[topic]}
+                  <span className="block text-xs font-normal text-zinc-600 dark:text-zinc-400">가상자산</span>
+                </th>
+                {countries.map((country) => {
+                  const rules = getCryptoRules(country, topic);
+                  return (
+                    <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
+                      {rules.length === 0 ? (
+                        <span className="text-zinc-600 dark:text-zinc-400">해당 자료를 찾지 못했습니다</span>
+                      ) : (
+                        <CryptoRuleList rules={rules} />
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -150,11 +211,12 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
 }
 
 export default function CompareSection() {
-  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<CryptoCountry[]>([]);
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<CryptoTopic[]>([]);
   const [notice, setNotice] = useState("");
 
-  function toggleCountry(country: Country) {
+  function toggleCountry(country: CryptoCountry) {
     // 이미 고른 국가는 해제한다
     if (selectedCountries.includes(country)) {
       setSelectedCountries(selectedCountries.filter((c) => c !== country));
@@ -175,6 +237,10 @@ export default function CompareSection() {
     setSelectedItems(selectedItems.includes(item) ? selectedItems.filter((i) => i !== item) : [...selectedItems, item]);
   }
 
+  function toggleTopic(topic: CryptoTopic) {
+    setSelectedTopics(selectedTopics.includes(topic) ? selectedTopics.filter((t) => t !== topic) : [...selectedTopics, topic]);
+  }
+
   return (
     <section aria-labelledby="compare-heading" className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -183,9 +249,11 @@ export default function CompareSection() {
         </h2>
         {/* 선택지에 없는 국가·항목은 고를 수 없으므로, 지원 범위를 미리 알려 준다 */}
         <p className="text-sm text-zinc-600 dark:text-zinc-400">
-          지원 범위: 국가 {SUPPORTED.countries.length}개({SUPPORTED.countries.map((c) => c.label).join(", ")}), 항목{" "}
-          {SUPPORTED.items.length}개({SUPPORTED.items.map((i) => i.label).join(", ")}). 이 밖의 국가와 항목은 현재 지원하지
-          않습니다.
+          지원 범위: 국가 {CRYPTO_SUPPORTED.countries.length}개({CRYPTO_SUPPORTED.countries.map((c) => c.label).join(", ")}).
+          세율 항목 {SUPPORTED.items.length}개({SUPPORTED.items.map((i) => i.label).join(", ")})는{" "}
+          {SUPPORTED.countries.map((c) => c.label).join(", ")} {SUPPORTED.countries.length}개국만, 가상자산 항목{" "}
+          {CRYPTO_SUPPORTED.topics.length}개({CRYPTO_SUPPORTED.topics.map((t) => t.label).join(", ")})는 개인 거주자 기준으로 10개국 모두
+          지원합니다. 이 밖의 국가와 항목은 현재 지원하지 않습니다.
         </p>
       </div>
 
@@ -198,10 +266,10 @@ export default function CompareSection() {
         </legend>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {COUNTRIES.map((country) => (
+          {CRYPTO_COUNTRIES.map((country) => (
             <CheckboxCard
               key={country}
-              label={COUNTRY_LABELS[country]}
+              label={CRYPTO_COUNTRY_LABELS[country]}
               checked={selectedCountries.includes(country)}
               onChange={() => toggleCountry(country)}
             />
@@ -218,10 +286,11 @@ export default function CompareSection() {
         <legend className="mb-1 text-base font-medium">
           항목 선택 (여러 개 선택 가능){" "}
           <span className="text-sm font-normal text-zinc-600 dark:text-zinc-400">
-            {selectedItems.length}개 선택
+            {selectedItems.length + selectedTopics.length}개 선택
           </span>
         </legend>
 
+        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">세율</p>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {ITEMS.map((item) => (
             <CheckboxCard
@@ -232,11 +301,29 @@ export default function CompareSection() {
             />
           ))}
         </div>
+
+        <p className="mt-2 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          가상자산{" "}
+          <span className="font-normal text-zinc-600 dark:text-zinc-400">
+            (개인 거주자 기준, 세법은 자주 바뀌니 기준일과 상태를 확인하세요. 투자 권유가 아닙니다)
+          </span>
+        </p>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {CRYPTO_TOPICS.map((topic) => (
+            <CheckboxCard
+              key={topic}
+              label={CRYPTO_TOPIC_LABELS[topic]}
+              checked={selectedTopics.includes(topic)}
+              onChange={() => toggleTopic(topic)}
+            />
+          ))}
+        </div>
       </fieldset>
 
       <CompareTable
-        countries={COUNTRIES.filter((c) => selectedCountries.includes(c))}
+        countries={CRYPTO_COUNTRIES.filter((c) => selectedCountries.includes(c))}
         items={ITEMS.filter((i) => selectedItems.includes(i))}
+        topics={CRYPTO_TOPICS.filter((t) => selectedTopics.includes(t))}
       />
     </section>
   );
