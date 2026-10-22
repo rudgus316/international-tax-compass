@@ -224,5 +224,103 @@
       "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
       "asOf": "2025-10-01"
     }
+  },
+  {
+    "country": "DE",
+    "topic": "rate",
+    "headline": "개인 소득세율",
+    "detail": "가상자산 전용 세법은 없고 일반 과세 규정을 따른다. 개인이 1년 이내에 매도하면 양도차익에 개인 소득세율로 과세한다. 구체적인 세율 구간은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "DE",
+    "topic": "allowance",
+    "headline": "연 1,000 면제한도",
+    "detail": "1년 이내 매도 양도차익에는 면제한도 1,000이 있다. 원문 PDF에서 통화 기호가 읽히지 않았으며, 독일 규정이라 유로로 보인다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "DE",
+    "topic": "taxType",
+    "headline": "일반 과세 규정(전용 법 없음)",
+    "detail": "가상자산에 적용되는 독일의 직접세 전용 법은 없고 일반 과세 규정으로 과세한다. 연방재무부(BMF) 2025-03-06 지침이 가상자산 분류를 돕는 유일한 공식 문서다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "DE",
+    "topic": "holdingPeriod",
+    "headline": "1년 초과 보유 시 비과세",
+    "detail": "개인이 가상자산을 취득해 1년을 넘겨 보유한 뒤 팔면 과세하지 않는다. 연방조세법원이 2023년 통화형 토큰에 대해 이 입장을 확인했다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "DE",
+    "topic": "reporting",
+    "headline": "DAC8 시행 예정",
+    "detail": "현재는 가상자산 전용 신고 의무가 없다. 독일 재무부가 DAC8(OECD CARF 기반 EU 지침) 이행법 초안을 2025-06-26에 냈고, 2026년 1월 1일 시행을 계획했다. 첫 보고 대상 기간은 2026년이다. 이후 확정 여부는 이 자료에서 확인하지 못했다.",
+    "status": "scheduled",
+    "effectiveFrom": "2026-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "GB",
+    "topic": "taxType",
+    "headline": "자본이득세 원칙(거래업이면 소득세)",
+    "detail": "영국 세무당국(HMRC)은 가상자산을 통화가 아닌 별도 자산으로 본다. 개인은 원칙적으로 자본이득세 대상이며, 가상자산 거래를 업으로 하는 예외적인 경우에만 소득세가 적용된다. 고용 소득으로 받은 가상자산은 소득세와 국민보험료 대상이다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "GB",
+    "topic": "miningStaking",
+    "headline": "스테이킹·대여 수익 과세 규정 추진",
+    "detail": "정부는 가상자산 대여·스테이킹 수익을 모두 수익적 소득(잡소득)으로 과세하는 규정을 도입할 계획이다. 이 규정은 아직 공포되지 않았다.",
+    "status": "proposed",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "GB",
+    "topic": "reporting",
+    "headline": "CARF 2026년 시행, 2027년 5월 보고",
+    "detail": "현재 가상자산 거래에 대한 별도 신고 의무는 없다. OECD 가상자산 보고 체계(CARF) 법안은 2026년 1월 1일 시행 예정이고, 보고는 2027년 5월이다. 표준과 다른 점은 없으며 통지·등록·벌칙 등 국내 이행 요소가 있다.",
+    "status": "scheduled",
+    "effectiveFrom": "2026-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
   }
 ]
