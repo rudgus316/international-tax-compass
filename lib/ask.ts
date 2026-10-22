@@ -35,7 +35,7 @@ export type AskResponse = {
 export type AskResult = { response: AskResponse; httpStatus: number };
 
 // 답변 글을 만드는 함수. 실제로는 OpenAI를 부르고, 시험에서는 가짜 함수로 바꿔 끼운다.
-export type GenerateFn = (question: string, values: readonly TaxValue[]) => Promise<string>;
+export type GenerateFn = (question: string, values: readonly TaxValue[], signal?: AbortSignal) => Promise<string>;
 
 // ── 질문 속 말 찾기 ─────────────────────────────────────────
 
@@ -260,6 +260,8 @@ function failureResult(error: unknown): AskResult {
   const reason = error instanceof OpenAiError ? error.reason : "upstream";
   if (reason === "no_key") return { response: finalize("error", "AI 서비스가 아직 설정되지 않았습니다"), httpStatus: 503 };
   if (reason === "timeout") return { response: finalize("error", "답변이 지연되고 있습니다. 잠시 후 다시 시도해 주세요"), httpStatus: 504 };
+  // 사용자가 창을 닫아 요청이 취소된 경우. 받아 볼 사람이 없으니 응답 내용은 중요하지 않다.
+  if (reason === "cancelled") return { response: finalize("error", "요청이 취소되었습니다"), httpStatus: 499 };
   return { response: finalize("error", "답변을 가져오지 못했습니다. 잠시 후 다시 시도해 주세요"), httpStatus: 502 };
 }
 
@@ -270,7 +272,7 @@ function result(response: AskResponse): AskResult {
   return { response, httpStatus: response.status === "error" || response.status === "blocked" ? 400 : 200 };
 }
 
-export async function answerQuestion(input: unknown, generate: GenerateFn = generateAnswer): Promise<AskResult> {
+export async function answerQuestion(input: unknown, generate: GenerateFn = generateAnswer, signal?: AbortSignal): Promise<AskResult> {
   if (typeof input !== "string") return result(finalize("error", "질문을 읽을 수 없습니다"));
   const question = input.trim();
 
@@ -306,7 +308,7 @@ export async function answerQuestion(input: unknown, generate: GenerateFn = gene
   const attempt = async (): Promise<AskResult> => {
     let raw: string;
     try {
-      raw = await generate(question, values);
+      raw = await generate(question, values, signal);
     } catch (error) {
       return failureResult(error);
     }
@@ -316,7 +318,8 @@ export async function answerQuestion(input: unknown, generate: GenerateFn = gene
   const first = await attempt();
   // 자료를 보냈는데도 AI가 "자료 없음"이라고 답하는 일이 가끔 있다(같은 질문을 반복해 시험하다 발견).
   // 그럴 때는 한 번만 다시 묻는다. 오류나 시간 초과는 다시 묻지 않는다(기다리는 시간이 두 배가 되지 않게).
-  if (first.response.status === "no_data") {
+  // 사용자가 이미 떠났으면(요청 취소) 다시 묻지 않는다.
+  if (first.response.status === "no_data" && !signal?.aborted) {
     const second = await attempt();
     return second.response.status === "ok" ? second : first;
   }

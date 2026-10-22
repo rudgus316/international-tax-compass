@@ -9,7 +9,7 @@ export const DEFAULT_MODEL = "gpt-4.1-mini";
 // OpenAI가 이 시간 안에 답하지 않으면 포기한다 (DESIGN 6장: 25초)
 export const OPENAI_TIMEOUT_MS = 25_000;
 
-export type OpenAiFailure = "no_key" | "timeout" | "upstream";
+export type OpenAiFailure = "no_key" | "timeout" | "upstream" | "cancelled";
 
 // 호출이 실패한 이유를 담는 오류. 메시지에는 키나 질문 내용을 넣지 않는다.
 export class OpenAiError extends Error {
@@ -47,13 +47,18 @@ export function buildDataBlock(values: readonly TaxValue[], today: Date = new Da
 }
 
 // 질문과 자료를 보내 답변 글을 받는다. 실패하면 OpenAiError를 던진다.
-export async function generateAnswer(question: string, values: readonly TaxValue[]): Promise<string> {
+// signal: 사용자가 창을 닫는 등 요청이 취소되면 알려 주는 신호. 취소되면 OpenAI 호출도 바로 멈춰 요금이 더 나가지 않게 한다.
+export async function generateAnswer(question: string, values: readonly TaxValue[], signal?: AbortSignal): Promise<string> {
   const apiKey = process.env.OPENAI_API_KEY?.trim();
   if (!apiKey) throw new OpenAiError("no_key");
   const model = process.env.OPENAI_MODEL?.trim() || DEFAULT_MODEL;
+  // 이미 취소된 요청이면 OpenAI를 부르지 않는다
+  if (signal?.aborted) throw new OpenAiError("cancelled");
 
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), OPENAI_TIMEOUT_MS);
+  const onCancel = () => controller.abort();
+  signal?.addEventListener("abort", onCancel, { once: true });
   try {
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -76,9 +81,11 @@ export async function generateAnswer(question: string, values: readonly TaxValue
     return content;
   } catch (error) {
     if (error instanceof OpenAiError) throw error;
-    if (error instanceof Error && error.name === "AbortError") throw new OpenAiError("timeout");
+    // 중단된 이유가 사용자의 취소인지, 25초 시간 초과인지 구분한다
+    if (error instanceof Error && error.name === "AbortError") throw new OpenAiError(signal?.aborted ? "cancelled" : "timeout");
     throw new OpenAiError("upstream");
   } finally {
     clearTimeout(timer);
+    signal?.removeEventListener("abort", onCancel);
   }
 }
