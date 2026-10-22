@@ -1,7 +1,7 @@
 "use client";
 
 // Design Ref: §2 — ② 비교하기. 국가 선택, 항목 선택, 비교표(값, 출처, 기준일, 오래된 자료 표시)를 만들었다.
-// 예외 문구(자료 없음, 자료 간 차이, 지원하지 않는 항목)는 이후 작업에서 표에 추가한다.
+// 예외 처리: 자료 없음, 자료 간 차이 있음, 한국 조약 세율 해당 없음, 지원 범위 안내.
 // Plan SC: 모든 값에 출처(기관명·URL·기준일)를 붙인다. 기준일이 1년 넘은 값에는 "오래된 자료"를 표시한다.
 // Plan SC: 4번째 국가를 고르려 하면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
@@ -12,7 +12,10 @@ import {
   ITEMS,
   ITEM_LABELS,
   RATE_TYPE_LABELS,
+  getSupportedList,
   getValues,
+  hasConflict,
+  isNotApplicable,
   isOutdated,
   type Country,
   type Item,
@@ -20,6 +23,9 @@ import {
 
 // 한 번에 비교할 수 있는 국가 수
 const MAX_COUNTRIES = 3;
+
+// 지원하는 국가와 항목 목록 (안내 문구용)
+const SUPPORTED = getSupportedList();
 
 // 체크박스 한 칸 (국가와 항목 선택이 같은 모양을 쓴다)
 function CheckboxCard({ label, checked, onChange }: { label: string; checked: boolean; onChange: () => void }) {
@@ -68,11 +74,19 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
               </th>
               {countries.map((country) => {
                 const values = getValues(country, item);
+                // 한국의 조세조약 세율은 기준국이라 만들지 않는다 (원천세율 항목에서만 안내)
+                const treatyNotApplicable = item !== "corporate" && isNotApplicable(country, "treaty");
                 return (
                   <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
-                    {values.length === 0 ? (
-                      <span className="text-zinc-500 dark:text-zinc-400">—</span>
-                    ) : (
+                    {values.length === 0 && !treatyNotApplicable && (
+                      <span className="text-zinc-600 dark:text-zinc-400">해당 자료를 찾지 못했습니다</span>
+                    )}
+                    {hasConflict(values) && (
+                      <p className="mb-2 inline-block rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-900 dark:bg-red-900 dark:text-red-100">
+                        자료 간 차이 있음
+                      </p>
+                    )}
+                    {values.length > 0 && (
                       <ul className="flex flex-col gap-2">
                         {values.map((v) => (
                           <li key={`${v.rateType}-${v.source.url}`} className="flex flex-col gap-0.5">
@@ -99,6 +113,12 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
                           </li>
                         ))}
                       </ul>
+                    )}
+                    {treatyNotApplicable && (
+                      <p className={`flex flex-col text-xs text-zinc-600 dark:text-zinc-400 ${values.length > 0 ? "mt-2" : ""}`}>
+                        <span>{RATE_TYPE_LABELS.treaty}</span>
+                        <span className="text-sm font-medium">해당 없음(기준국)</span>
+                      </p>
                     )}
                   </td>
                 );
@@ -139,9 +159,17 @@ export default function CompareSection() {
 
   return (
     <section aria-labelledby="compare-heading" className="flex flex-col gap-6">
-      <h2 id="compare-heading" className="text-2xl font-semibold">
-        비교하기
-      </h2>
+      <div className="flex flex-col gap-2">
+        <h2 id="compare-heading" className="text-2xl font-semibold">
+          비교하기
+        </h2>
+        {/* 선택지에 없는 국가·항목은 고를 수 없으므로, 지원 범위를 미리 알려 준다 */}
+        <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          지원 범위: 국가 {SUPPORTED.countries.length}개({SUPPORTED.countries.map((c) => c.label).join(", ")}), 항목{" "}
+          {SUPPORTED.items.length}개({SUPPORTED.items.map((i) => i.label).join(", ")}). 이 밖의 국가와 항목은 현재 지원하지
+          않습니다.
+        </p>
+      </div>
 
       <fieldset className="flex flex-col gap-3">
         <legend className="mb-1 text-base font-medium">
