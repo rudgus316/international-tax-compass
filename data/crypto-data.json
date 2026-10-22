@@ -40,6 +40,19 @@
   },
   {
     "country": "KR",
+    "topic": "lossCarryover",
+    "headline": "이월공제 불가",
+    "detail": "가상자산 손실은 다음 해로 넘겨 공제할 수 없다. 같은 해 안의 손익은 통산해 신고한다. 2027년 1월 1일 이후 양도·대여분부터 적용된다.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "국세청 가상자산소득 과세 안내(거주자) — 게시일 표시 없음, 기준일은 확인일. 법령 원문은 대조하지 못함",
+      "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=40370&cntntsId=238935",
+      "asOf": "2026-10-22"
+    }
+  },
+  {
+    "country": "KR",
     "topic": "taxType",
     "headline": "기타소득(분리과세)",
     "detail": "가상자산 양도·대여 소득은 기타소득으로 분류해 다른 소득과 합치지 않고 분리과세한다. 다음 해 5월 종합소득세 신고기간에 신고한다. 2027년 1월 1일 이후분부터 적용된다.",
