@@ -2,6 +2,9 @@
 
 해외에 진출했거나 진출을 준비하는 기업의 세무·재무 담당자가, 주요국의 조세 정보를 **출처와 함께 나란히 비교**하고 **문장으로 물어볼 수 있는** 웹 앱입니다.
 
+- **배포 주소**: https://international-tax-compass.vercel.app
+- **GitHub 저장소**: https://github.com/rudgus316/international-tax-compass
+
 > 참고용 서비스입니다. 세무 자문이 아니며, 세액 계산과 절세 자문은 제공하지 않습니다.
 
 ## 무엇을 하나요
