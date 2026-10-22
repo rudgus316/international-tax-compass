@@ -78,17 +78,29 @@ const UNSUPPORTED_COUNTRIES = [
 ];
 const UNSUPPORTED_ITEMS = [
   "부가가치세", "부가세", "vat", "양도소득세", "종합소득세", "근로소득세", "개인소득세", "상속세", "증여세", "관세",
-  "종합부동산세", "재산세", "취득세", "소비세", "판매세",
+  "종합부동산세", "재산세", "취득세", "소비세", "판매세", "nft", "엔에프티", "디파이", "defi",
 ];
 
 // 가상자산 질문에서는 싱가포르·호주·캐나다·스위스도 지원한다 (세율 질문은 6개국만)
 const CRYPTO_ONLY_COUNTRY_NAMES = ["캐나다", "호주", "싱가포르", "스위스"];
 const CRYPTO_UNSUPPORTED_COUNTRIES = UNSUPPORTED_COUNTRIES.filter((c) => !CRYPTO_ONLY_COUNTRY_NAMES.includes(c));
 // 가상자산 질문에서는 종합소득세·양도소득세·상속세·증여세도 항목 설명에 나오는 말이라 막지 않는다
-const CRYPTO_UNSUPPORTED_ITEMS = ["부가가치세", "부가세", "vat", "관세", "종합부동산세", "재산세", "취득세", "소비세", "판매세"];
+// NFT·디파이는 이번 범위 밖이다(PRD 10.6). 자료에 없는데 일반 규정을 끌어다 추측해 답하지 않도록 막는다.
+const CRYPTO_UNSUPPORTED_ITEMS = [
+  "부가가치세", "부가세", "vat", "관세", "종합부동산세", "재산세", "취득세", "소비세", "판매세", "nft", "엔에프티", "디파이", "defi",
+];
 
 // 세액 계산이나 절세 방법을 묻는 말
 const REFUSE_PATTERNS: RegExp[] = [/세액/, /세금\s*계산/, /계산해/, /절세/, /탈세/, /세금을?\s*(줄|아끼)/, /(얼마|몇\s*원).{0,10}(내야|납부|내게)/];
+
+// 금액을 넣고 "벌면·받으면·이익이면" 하는 가정으로 묻는 말은 세액·과세 대상 금액을 계산해 달라는 뜻이다.
+// (금액만 있는 질문, 예: "기본공제 250만 원이 맞나요?"는 막지 않는다.) CHECK.md 높음 2번.
+const MONEY_AMOUNT =
+  /(\d[\d,.]*\s*(?:(?:천|만|억|조)+\s*)?(?:원|달러|엔|유로|파운드|위안)|\d[\d,.]*\s*(?:천|만|억|조)+|[$€¥₩£]\s*\d|\d[\d,.]*\s*(?:usd|krw|jpy|eur|gbp)\b)/i;
+const AMOUNT_SCENARIO = /(벌|받|얻|생기|수익|이익|차익|이면|이라면|일\s*때|가정|투자하|팔|매도|양도하|입금|송금)/;
+function asksToCalculateOnAmount(question: string): boolean {
+  return MONEY_AMOUNT.test(question) && AMOUNT_SCENARIO.test(question);
+}
 
 // 서비스 내부 지시문(시스템 프롬프트)을 보여 달라는 말
 const PROMPT_LEAK_PATTERNS: RegExp[] = [/프롬프트/, /지시문/, /system\s*prompt/i, /(시스템|내부|너의|당신의|네)\s*(규칙|지시|명령|설정)/];
@@ -362,7 +374,7 @@ export async function answerQuestion(input: unknown, generate: GenerateFn = gene
   if (pii.length > 0) return result(finalize("blocked", `개인정보로 보이는 내용이 있어 보낼 수 없습니다 (감지: ${pii.join(", ")})`));
 
   // 세액 계산·절세 요청, 내부 지시문 요구, 지원 밖 질문은 AI를 부르지 않고 바로 답한다
-  if (REFUSE_PATTERNS.some((pattern) => pattern.test(question))) {
+  if (REFUSE_PATTERNS.some((pattern) => pattern.test(question)) || asksToCalculateOnAmount(question)) {
     return result(finalize("refused", "세액 계산과 절세 자문은 제공하지 않습니다"));
   }
   if (PROMPT_LEAK_PATTERNS.some((pattern) => pattern.test(question))) {
