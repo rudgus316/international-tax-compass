@@ -1,4 +1,5 @@
-// Design Ref: §2 — 화면 구성 (① 머리말, ② 비교하기, ④ 바닥글). ③ 질문하기는 이후 작업에서 main 안에 추가한다.
+// Design Ref: §2 — 화면 구성 (① 머리말, ② 비교하기, ③ 질문하기, ④ 바닥글)
+import AskSection from "./components/AskSection";
 import CompareSection from "./components/CompareSection";
 
 export default function Home() {
@@ -19,9 +20,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* ② 비교하기 (③ 질문하기는 이후 작업에서 이 아래에 추가) */}
-      <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-8 sm:px-8">
+      {/* ② 비교하기, ③ 질문하기 */}
+      <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col gap-12 px-4 py-8 sm:px-8">
         <CompareSection />
+        <AskSection />
       </main>
 
       {/* ④ 바닥글: 모든 화면에 보이는 면책 문구 */}
