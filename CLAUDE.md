@@ -39,6 +39,8 @@ OECD 주요국의 조세 정보(법인세율, 배당·이자·로열티 원천�
 5. 수정 후 `npm run lint`와 `npm run build`가 통과하는지 확인한다.
 6. 새 파일은 `my-app` 폴더 안에만 만든다.
 7. 이미 설치된 서브에이전트는 필요할 때마다 적극 활용한다.
+8. 서버·AI 쪽 코드(`app/api/ask/route.ts`, `lib/ask.ts`, `lib/openai.ts`, `lib/pii.ts`, `lib/request-guard.ts`)나 자료(`data/tax-data.json`)를 바꾸면 `node scripts/eval.mjs --runs 3`(정답률 90% 이상)을 다시 돌리고 결과를 있는 그대로 알린다. AI 답은 매번 달라서 한 번 통과로 끝내지 않고, 점수를 맞추려고 채점 기준을 바꾸지 않는다(바꾸면 이유를 적는다).
+9. 개발 서버를 켠 채로 `npm run build`를 하지 않는다(같은 `.next` 폴더를 쓴다). 시험하려고 프로젝트 안에 만든 임시 파일은 끝나면 프로젝트 밖으로 옮기고 커밋하지 않은 뒤 `npm run build`를 다시 돌려 흔적을 지운다. 한글 질문을 터미널 인자로 보내면 깨지므로 UTF-8 파일로 보낸다.
 
 ## 작업 절차 (검증 루프)
 
