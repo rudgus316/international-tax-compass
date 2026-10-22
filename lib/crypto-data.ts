@@ -152,3 +152,63 @@ export function parseCryptoData(raw: unknown): CryptoRule[] {
 
 // 등록된 자료. 파일이 틀리면 여기서 바로 오류가 나서 빌드가 멈춘다.
 export const CRYPTO_DATA: readonly CryptoRule[] = parseCryptoData(rawCryptoData);
+
+// ── 조회 ────────────────────────────────────────────────────
+
+// 같은 칸에 자료가 여럿일 때 보여 줄 순서: 시행 중 → 시행 예정 → 논의 중, 같은 상태면 기준일이 최근인 것 먼저
+const STATUS_ORDER: Record<CryptoStatus, number> = { in_force: 0, scheduled: 1, proposed: 2 };
+
+// 국가와 항목에 해당하는 자료를 모두 돌려준다. 등록된 자료가 없으면 빈 목록이다.
+// (화면에서는 "해당 자료를 찾지 못했습니다"로 표시)
+export function getCryptoRules(
+  country: CryptoCountry,
+  topic: CryptoTopic,
+  data: readonly CryptoRule[] = CRYPTO_DATA,
+): CryptoRule[] {
+  return data
+    .filter((r) => r.country === country && r.topic === topic)
+    .sort(
+      (a, b) =>
+        STATUS_ORDER[a.status] - STATUS_ORDER[b.status] || b.source.asOf.localeCompare(a.source.asOf),
+    );
+}
+
+// ── 지원 목록 ───────────────────────────────────────────────
+
+export function isSupportedCryptoCountry(code: string): code is CryptoCountry {
+  return isOneOf(CRYPTO_COUNTRIES, code);
+}
+
+export function isSupportedCryptoTopic(code: string): code is CryptoTopic {
+  return isOneOf(CRYPTO_TOPICS, code);
+}
+
+// 지원하는 국가와 항목 목록 (지원하지 않는 국가·항목을 골랐을 때 안내용)
+export function getCryptoSupportedList() {
+  return {
+    countries: CRYPTO_COUNTRIES.map((code) => ({ code, label: CRYPTO_COUNTRY_LABELS[code] })),
+    topics: CRYPTO_TOPICS.map((code) => ({ code, label: CRYPTO_TOPIC_LABELS[code] })),
+  };
+}
+
+// ── 오래된 자료·상태 판별 ───────────────────────────────────
+
+// 기준일이 오늘보다 이 날수 넘게 지났으면 "오래된 자료"로 본다. (세율 자료와 같은 기준이지만 값은 따로 둔다)
+export const CRYPTO_OUTDATED_AFTER_DAYS = 365;
+
+export function isCryptoOutdated(rule: CryptoRule, today: Date = new Date()): boolean {
+  const asOf = new Date(`${rule.source.asOf}T00:00:00Z`);
+  const todayUtc = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+  const days = Math.floor((todayUtc - asOf.getTime()) / 86_400_000);
+  return days > CRYPTO_OUTDATED_AFTER_DAYS;
+}
+
+// 시행 예정이거나 논의 중인 규정인지 ("※ 아직 시행 전" 안내를 붙일 때 쓴다)
+export function isNotYetInForce(rule: CryptoRule): boolean {
+  return rule.status !== "in_force";
+}
+
+// 자료 묶음 중 하나라도 시행 전(시행 예정·논의 중)이면 true
+export function hasNotYetInForce(rules: readonly CryptoRule[]): boolean {
+  return rules.some(isNotYetInForce);
+}
