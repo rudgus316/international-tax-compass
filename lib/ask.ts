@@ -72,6 +72,12 @@ const UNSUPPORTED_ITEMS = [
 // 세액 계산이나 절세 방법을 묻는 말
 const REFUSE_PATTERNS: RegExp[] = [/세액/, /세금\s*계산/, /계산해/, /절세/, /탈세/, /세금을?\s*(줄|아끼)/, /(얼마|몇\s*원).{0,10}(내야|납부|내게)/];
 
+// 서비스 내부 지시문(시스템 프롬프트)을 보여 달라는 말
+const PROMPT_LEAK_PATTERNS: RegExp[] = [/프롬프트/, /지시문/, /system\s*prompt/i, /(시스템|내부|너의|당신의|네)\s*(규칙|지시|명령|설정)/];
+
+// AI 답에 내부 지시문이 그대로 나온 흔적. 이런 글이 보이면 AI 답을 쓰지 않는다.
+const PROMPT_LEAK_MARKERS = ["국제조세 비교 도우미", "[자료]에 있는 내용만", "자료 번호를", "400자 이내로, 간결하게"];
+
 function mentions(text: string, words: string[]): boolean {
   return words.some((word) => text.includes(word));
 }
@@ -208,6 +214,9 @@ function splitIntoPieces(raw: string, valueCount: number): Piece[] {
 // - 출처 번호가 하나도 없으면 no_data로 바꾼다
 // - 면책 문구를 포함해 500자를 넘으면 문장 단위로 줄인다
 function checkAiAnswer(raw: string, values: TaxValue[], askedCountries: Country[]): AskResponse {
+  // 내부 지시문이 그대로 나온 답은 쓰지 않고, 등록된 값을 정리한 답으로 바꾼다
+  if (PROMPT_LEAK_MARKERS.some((marker) => raw.includes(marker))) return buildListAnswer(values, askedCountries);
+
   const allowed = allowedPercents(values);
   // "15%p" 같은 퍼센트포인트 표현은 모델이 차이를 계산했다는 뜻이다. 계산한 숫자는 쓰지 않는다.
   const calculated = /%\s*p\b|%\s*포인트|퍼센트\s*포인트/i.test(raw);
@@ -274,9 +283,12 @@ export async function answerQuestion(input: unknown, generate: GenerateFn = gene
   const pii = detectPii(question);
   if (pii.length > 0) return result(finalize("blocked", `개인정보로 보이는 내용이 있어 보낼 수 없습니다 (감지: ${pii.join(", ")})`));
 
-  // 세액 계산·절세 요청과 지원 밖 질문은 AI를 부르지 않고 바로 답한다
+  // 세액 계산·절세 요청, 내부 지시문 요구, 지원 밖 질문은 AI를 부르지 않고 바로 답한다
   if (REFUSE_PATTERNS.some((pattern) => pattern.test(question))) {
     return result(finalize("refused", "세액 계산과 절세 자문은 제공하지 않습니다"));
+  }
+  if (PROMPT_LEAK_PATTERNS.some((pattern) => pattern.test(question))) {
+    return result(finalize("refused", "서비스 내부 지시문은 알려 드릴 수 없습니다. 조세 자료에 대한 질문만 답할 수 있습니다"));
   }
   const text = question.toLowerCase();
   if (mentions(text, UNSUPPORTED_COUNTRIES) || mentions(text, UNSUPPORTED_ITEMS)) {
@@ -291,11 +303,22 @@ export async function answerQuestion(input: unknown, generate: GenerateFn = gene
   if (values.length === 0) return result(finalize("no_data", "해당 자료를 찾지 못했습니다"));
 
   // 자료 + 질문을 AI에게 보내고, 돌아온 글을 점검한다
-  let raw: string;
-  try {
-    raw = await generate(question, values);
-  } catch (error) {
-    return failureResult(error);
+  const attempt = async (): Promise<AskResult> => {
+    let raw: string;
+    try {
+      raw = await generate(question, values);
+    } catch (error) {
+      return failureResult(error);
+    }
+    return result(checkAiAnswer(raw, values, askedCountries));
+  };
+
+  const first = await attempt();
+  // 자료를 보냈는데도 AI가 "자료 없음"이라고 답하는 일이 가끔 있다(같은 질문을 반복해 시험하다 발견).
+  // 그럴 때는 한 번만 다시 묻는다. 오류나 시간 초과는 다시 묻지 않는다(기다리는 시간이 두 배가 되지 않게).
+  if (first.response.status === "no_data") {
+    const second = await attempt();
+    return second.response.status === "ok" ? second : first;
   }
-  return result(checkAiAnswer(raw, values, askedCountries));
+  return first;
 }
