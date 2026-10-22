@@ -169,6 +169,18 @@
   },
   {
     "country": "US",
+    "item": "corporate",
+    "rateType": "combined",
+    "value": 21,
+    "note": "연방 법인세율 21%만 기재한 값이며 주 세율을 더한 합산 세율이 아님. 주 법인소득세율은 주마다 달라 대체로 1%~10% 범위이고 일부 주는 법인소득세가 없음(PwC 안내). 해당 자료는 합산 세율을 제시하지 않음",
+    "source": {
+      "org": "PwC Worldwide Tax Summaries",
+      "url": "https://taxsummaries.pwc.com/united-states/corporate/taxes-on-corporate-income",
+      "asOf": "2026-09-04"
+    }
+  },
+  {
+    "country": "US",
     "item": "dividend",
     "rateType": "treaty",
     "partnerCountry": "KR",
