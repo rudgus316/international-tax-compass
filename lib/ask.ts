@@ -1,6 +1,7 @@
 // Design Ref: §3.2 ②~⑦ — 질문 처리: 서버 검사, 질문 분류, 자료 고르기, OpenAI 호출, 답변 점검, 공통 마무리.
 // Plan SC: 자료 안에서만 답하기, 출처 1개 이상, 500자 이내, 모든 응답에 면책 문구, 세액 계산 요청 거절.
 
+import { DISCLAIMER } from "./disclaimer";
 import { OpenAiError, generateAnswer } from "./openai";
 import { MAX_QUESTION_LENGTH, detectPii } from "./pii";
 import {
@@ -18,7 +19,7 @@ import {
   type TaxValue,
 } from "./tax-data";
 
-export const DISCLAIMER = "참고용이며 세무 자문이 아닙니다";
+export { DISCLAIMER };
 export const MAX_ANSWER_LENGTH = 500;
 
 export type AskStatus = "ok" | "no_data" | "unsupported" | "refused" | "blocked" | "error";
