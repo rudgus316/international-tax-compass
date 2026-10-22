@@ -202,7 +202,11 @@ function buildListAnswer(values: Fact[], askedCountries: CryptoCountry[]): AskRe
 // ── AI 답변 점검 (DESIGN ⑥) ─────────────────────────────────
 
 // 자료 번호 표시. [S1], [S1][S2], [S1, S7]처럼 모델이 쓰는 여러 모양을 모두 읽는다.
-const TAG_PATTERN = /\[\s*S\s*\d+(?:\s*[,，、]\s*S?\s*\d+)*\s*\]/g;
+// [S2, 오래된 자료]처럼 번호 뒤에 짧은 글(숫자 없는)이 함께 들어간 모양도 번호표로 읽는다. 그 글은 서버가 따로 안내 줄을 붙이므로 지워도 된다.
+const TAG_PATTERN = /\[\s*S\s*\d+(?:\s*[,，、]\s*S?\s*\d+)*(?:\s*[,，、;]\s*[^\]\[\d]{1,20})?\s*\]/g;
+
+// 모델이 글 사이에 끼워 넣는 보이지 않는 글자(너비 없는 공백 등). 번호표 인식을 방해하므로 지운다.
+const INVISIBLE_CHARS = /[​-‍⁠﻿]/g;
 
 // 글 속 "12.5%" 같은 숫자를 모두 꺼낸다
 function percentNumbers(text: string): number[] {
@@ -268,7 +272,8 @@ function splitIntoPieces(raw: string, valueCount: number): Piece[] {
 // - 숫자가 보낸 자료에 없으면 AI 글을 쓰지 않고 자료 정리 답으로 바꾼다
 // - 출처 번호가 하나도 없으면 no_data로 바꾼다
 // - 면책 문구를 포함해 500자를 넘으면 문장 단위로 줄인다
-function checkAiAnswer(raw: string, values: Fact[], askedCountries: CryptoCountry[]): AskResponse {
+function checkAiAnswer(rawText: string, values: Fact[], askedCountries: CryptoCountry[]): AskResponse {
+  const raw = rawText.replace(INVISIBLE_CHARS, "");
   // 내부 지시문이 그대로 나온 답은 쓰지 않고, 등록된 값을 정리한 답으로 바꾼다
   if (PROMPT_LEAK_MARKERS.some((marker) => raw.includes(marker))) return buildListAnswer(values, askedCountries);
 

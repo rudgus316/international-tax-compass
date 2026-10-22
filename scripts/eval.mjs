@@ -4,6 +4,7 @@
 //   node scripts/eval.mjs                 # 20개를 한 번씩 채점
 //   node scripts/eval.mjs --runs 3        # 20개를 세 번 반복해 흔들림을 본다
 //   node scripts/eval.mjs --only 3,7      # 일부 질문만
+//   node scripts/eval.mjs --set tax       # 세율 질문(1~20번)만. --set crypto 는 가상자산 질문(21~40번)만. 기본은 전체
 //   node scripts/eval.mjs --url http://localhost:3000
 //
 // 정답 기준(PRD 3번): 숫자와 출처가 모두 자료와 맞아야 정답이다.
@@ -28,8 +29,10 @@ const only = option("only", "")
   .filter(Boolean)
   .map(Number);
 
+// 질문 묶음: 가상자산 질문에는 "set": "crypto"가 붙어 있고, 없으면 세율 질문(tax)이다
+const set = option("set", "all");
 const questions = JSON.parse(readFileSync(new URL("../data/eval-questions.json", import.meta.url), "utf8")).filter(
-  (q) => only.length === 0 || only.includes(q.id),
+  (q) => (only.length === 0 || only.includes(q.id)) && (set === "all" || (q.set ?? "tax") === set),
 );
 
 // ── 채점 ────────────────────────────────────────────────────
@@ -63,6 +66,10 @@ function grade(question, response) {
 
   for (const fragment of expect.text ?? []) {
     if (!answer.includes(fragment)) reasons.push(`'${fragment}' 문구 없음`);
+  }
+  // textAny: 묶음마다 그중 하나는 답에 있어야 한다 (같은 뜻을 다르게 쓸 수 있는 말)
+  for (const group of expect.textAny ?? []) {
+    if (!group.some((fragment) => answer.includes(fragment))) reasons.push(`'${group.join("' 또는 '")}' 중 하나가 답에 없음`);
   }
 
   if (expect.status === "ok") {
