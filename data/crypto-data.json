@@ -154,13 +154,13 @@
   {
     "country": "US",
     "topic": "reporting",
-    "headline": "CARF 도입 방향 미정",
-    "detail": "재무부·국세청은 2027년 거래분을 대상으로 2028년까지 OECD 가상자산 보고 체계(CARF) 이행 규정을 제안할 계획이라고 했으나, 이후 정부의 접근 방식은 정해지지 않았다.",
+    "headline": "CARF 2029년까지 도입 의향",
+    "detail": "미국은 OECD 가상자산 보고 체계(CARF)를 2029년까지 국내법에 도입하겠다는 의향을 공식적으로 밝혔다. 재무부 규정안이 백악관 검토 단계였고 최종 규정과 구체적 시행일은 확정되지 않았다. (2025년 11월 기준)",
     "status": "proposed",
     "source": {
-      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
-      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
-      "asOf": "2025-10-01"
+      "org": "IFC Review (2025-11-28 기사) — 2차 자료, 공식 규정 원문은 대조하지 못함",
+      "url": "https://www.ifcreview.com/news/2025/november/offshore-crypto-irs-steps-closer-to-automatic-reporting-under-oecd-carf/",
+      "asOf": "2025-11-28"
     }
   },
   {
