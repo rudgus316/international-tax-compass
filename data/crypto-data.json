@@ -1,1 +1,202 @@
-[]
+[
+  {
+    "country": "KR",
+    "topic": "rate",
+    "headline": "20%",
+    "detail": "개인의 가상자산 양도·대여 소득은 기타소득으로 20% 분리과세한다. 2027년 1월 1일 이후 양도·대여분부터 적용된다(2년 유예). 지방소득세를 더한 22%는 별도 자료(PwC) 참고.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "국세청 가상자산소득 과세 안내(거주자) — 게시일 표시 없음, 기준일은 확인일. 법령 원문은 대조하지 못함",
+      "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=40370&cntntsId=238935",
+      "asOf": "2026-10-22"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "rate",
+    "headline": "22%(지방소득세 포함)",
+    "detail": "한국 거주 개인의 가상자산 양도·대여 소득에 지방소득세를 포함해 22%. 2027년 1월 1일 시행 예정이며, 2024년 12월 국회 의결로 2025년에서 2년 미뤄졌다.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "allowance",
+    "headline": "연 250만 원",
+    "detail": "가상자산 소득 연 250만 원까지는 과세하지 않는 과세최저한이 있다. 2027년 1월 1일 이후 양도·대여분부터 적용된다.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "국세청 가상자산소득 과세 안내(거주자) — 게시일 표시 없음, 기준일은 확인일. 법령 원문은 대조하지 못함",
+      "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=40370&cntntsId=238935",
+      "asOf": "2026-10-22"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "taxType",
+    "headline": "기타소득(분리과세)",
+    "detail": "가상자산 양도·대여 소득은 기타소득으로 분류해 다른 소득과 합치지 않고 분리과세한다. 다음 해 5월 종합소득세 신고기간에 신고한다. 2027년 1월 1일 이후분부터 적용된다.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "국세청 가상자산소득 과세 안내(거주자) — 게시일 표시 없음, 기준일은 확인일. 법령 원문은 대조하지 못함",
+      "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=40370&cntntsId=238935",
+      "asOf": "2026-10-22"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "giftInheritance",
+    "headline": "평가 방법만 확인됨",
+    "detail": "증여 시 가상자산은 국내 4개 지정 거래소(업비트·빗썸·코빗·코인원)에 상장된 경우 평가일 전후 1개월 일평균가의 평균으로 평가한다. 증여·상속세율과 상속 규정은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "reporting",
+    "headline": "거래소가 거래명세 제출",
+    "detail": "자격을 갖춘 가상자산사업자는 분기별·연간 거래명세서를 세무당국에 제출한다(분기는 2023년 1월 1일, 연간은 2024년 1월 1일부터).",
+    "status": "in_force",
+    "effectiveFrom": "2023-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "KR",
+    "topic": "reporting",
+    "headline": "CARF 정보 교환 2027년 시작 예정",
+    "detail": "OECD 가상자산 보고 체계(CARF)에 서명했다. 2026년 거래분에 대해 2027년부터 정보 교환을 시작할 예정이며, 보고 기한은 다음 해 4월 말이다. 시행규칙은 확정 전 단계였다.",
+    "status": "scheduled",
+    "effectiveFrom": "2027-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "US",
+    "topic": "rate",
+    "headline": "조건에 따라 다름",
+    "detail": "가상자산은 일반 재산으로 보고, 처분 이익이 자본이득인지 일반소득인지는 보유자에게 그 자산이 어떤 성격인지(재고자산, 자본자산 등)에 따라 달라진다. 구체적 세율은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "US",
+    "topic": "taxType",
+    "headline": "재산(property)으로 과세",
+    "detail": "가상자산은 일반 재산으로 취급해 일반 과세 원칙을 적용한다. 거래 이익은 자산의 성격에 따라 자본이득 또는 일반소득이 된다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "US",
+    "topic": "miningStaking",
+    "headline": "일반소득세율로 과세",
+    "detail": "대여·채굴·스테이킹 등에서 정기적으로 생기는 소득은 납세자의 활동(사업, 취미 등)에 따라 일반적으로 일반소득세율로 과세한다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "US",
+    "topic": "reporting",
+    "headline": "브로커가 거래 내역 보고",
+    "detail": "2024년 확정 규정에 따라 가상자산 브로커는 고객의 처분 거래 총수입과 취득가액을 보고해야 하며, 2025년 거래분부터 적용된다. DeFi 브로커 보고 규정도 확정됐다.",
+    "status": "in_force",
+    "effectiveFrom": "2025-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "US",
+    "topic": "reporting",
+    "headline": "CARF 도입 방향 미정",
+    "detail": "재무부·국세청은 2027년 거래분을 대상으로 2028년까지 OECD 가상자산 보고 체계(CARF) 이행 규정을 제안할 계획이라고 했으나, 이후 정부의 접근 방식은 정해지지 않았다.",
+    "status": "proposed",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "JP",
+    "topic": "rate",
+    "headline": "누진세율",
+    "detail": "개인의 가상자산 거래 소득은 소득세 누진세율로 과세한다. 구체적인 세율 구간은 이 자료에 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "JP",
+    "topic": "taxType",
+    "headline": "잡소득(누진과세)",
+    "detail": "개인의 가상자산 거래 소득은 잡소득(miscellaneous income)으로 보아 소득세 누진세율로 과세한다. 매매·사용·교환 소득이 대상이다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "JP",
+    "topic": "miningStaking",
+    "headline": "채굴 취득분은 과세 대상",
+    "detail": "가상자산의 매매·사용·교환 소득과 채굴로 취득한 가상자산이 과세 범위에 들어간다. 스테이킹은 이 자료에 언급이 없다.",
+    "status": "in_force",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  },
+  {
+    "country": "JP",
+    "topic": "reporting",
+    "headline": "CARF 기반 보고 2026년 시행",
+    "detail": "2024년 세제 개정으로 OECD 가상자산 보고 체계(CARF)에 따른 보고 제도가 2026년 1월 1일 시행된다. 가상자산 사업자는 2026년 12월 31일까지 이용자의 거주국을 확인하고, 이후 다음 해 4월 30일까지 거래 정보를 제출한다.",
+    "status": "in_force",
+    "effectiveFrom": "2026-01-01",
+    "source": {
+      "org": "PwC Annual Global Crypto Tax Report 2026 (2차 자료)",
+      "url": "https://www.pwc.com/cl/es/publicaciones/informe-global-sobre-criptoimpuestos/Informe-Global-sobre-Criptoimpuestos-2026-PwC.pdf",
+      "asOf": "2025-10-01"
+    }
+  }
+]
