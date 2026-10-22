@@ -6,6 +6,7 @@
 // Plan SC: 4번째 국가를 고르려 하면 선택되지 않게 하고 "최대 3개국까지 비교할 수 있습니다"라고 안내한다.
 
 import { useState } from "react";
+import { buildCompareCsv, csvFileName } from "@/lib/csv";
 import {
   COUNTRIES,
   COUNTRY_LABELS,
@@ -37,6 +38,21 @@ function CheckboxCard({ label, checked, onChange }: { label: string; checked: bo
   );
 }
 
+// 지금 보이는 비교표를 CSV 파일로 내려받는다. 엑셀에서 한글이 깨지지 않도록 맨 앞에 BOM(﻿)을 붙인다.
+function downloadCsv(countries: Country[], items: Item[]) {
+  const today = new Date();
+  const blob = new Blob([`﻿${buildCompareCsv(countries, items, today)}`], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = csvFileName(today);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  // 내려받기가 시작된 뒤에 임시 주소를 지운다
+  setTimeout(() => URL.revokeObjectURL(url), 0);
+}
+
 // 비교표: 가로는 고른 국가, 세로는 고른 항목. 한 칸에는 등록된 세율을 종류별로 한 줄씩 보여 준다.
 function CompareTable({ countries, items }: { countries: Country[]; items: Item[] }) {
   if (countries.length === 0 || items.length === 0) {
@@ -44,89 +60,100 @@ function CompareTable({ countries, items }: { countries: Country[]; items: Item[
   }
 
   return (
-    <div className="relative overflow-x-auto rounded-lg border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-      <table className="w-full min-w-max border-collapse text-left">
-        <caption className="sr-only">국가별 조세 비교표</caption>
-        <thead>
-          <tr className="bg-zinc-100 dark:bg-zinc-800">
-            <th scope="col" className="border-b border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700">
-              항목
-            </th>
-            {countries.map((country) => (
-              <th
-                key={country}
-                scope="col"
-                className="border-b border-l border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700"
-              >
-                {COUNTRY_LABELS[country]}
+    <div className="flex flex-col gap-3">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => downloadCsv(countries, items)}
+          className="min-h-12 rounded-lg border border-blue-700 bg-white px-5 py-2 font-medium text-blue-800 hover:bg-blue-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-blue-400 dark:bg-zinc-900 dark:text-blue-200 dark:hover:bg-blue-950"
+        >
+          엑셀(CSV)로 내려받기
+        </button>
+      </div>
+      <div className="relative overflow-x-auto rounded-lg border border-zinc-300 bg-white dark:border-zinc-700 dark:bg-zinc-900">
+        <table className="w-full min-w-max border-collapse text-left">
+          <caption className="sr-only">국가별 조세 비교표</caption>
+          <thead>
+            <tr className="bg-zinc-100 dark:bg-zinc-800">
+              <th scope="col" className="border-b border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700">
+                항목
               </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item) => (
-            <tr key={item}>
-              <th
-                scope="row"
-                className="border-t border-zinc-300 bg-zinc-50 px-4 py-3 align-top font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
-              >
-                {ITEM_LABELS[item]}
-              </th>
-              {countries.map((country) => {
-                const values = getValues(country, item);
-                // 한국의 조세조약 세율은 기준국이라 만들지 않는다 (원천세율 항목에서만 안내)
-                const treatyNotApplicable = item !== "corporate" && isNotApplicable(country, "treaty");
-                return (
-                  <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
-                    {values.length === 0 && !treatyNotApplicable && (
-                      <span className="text-zinc-600 dark:text-zinc-400">해당 자료를 찾지 못했습니다</span>
-                    )}
-                    {hasConflict(values) && (
-                      <p className="mb-2 inline-block rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-900 dark:bg-red-900 dark:text-red-100">
-                        자료 간 차이 있음
-                      </p>
-                    )}
-                    {values.length > 0 && (
-                      <ul className="flex flex-col gap-2">
-                        {values.map((v) => (
-                          <li key={`${v.rateType}-${v.source.url}`} className="flex flex-col gap-0.5">
-                            <span className="text-xs text-zinc-600 dark:text-zinc-400">{RATE_TYPE_LABELS[v.rateType]}</span>
-                            <span className="text-lg font-semibold">{v.value}%</span>
-                            {/* 출처: 기관명(자료 주소로 연결)과 기준일. 모든 값에 반드시 붙는다 */}
-                            <a
-                              href={v.source.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs text-blue-700 underline underline-offset-2 dark:text-blue-300"
-                            >
-                              {v.source.org}
-                              <span className="sr-only"> (새 창에서 열림)</span>
-                            </a>
-                            <span className="text-xs text-zinc-600 dark:text-zinc-400">
-                              기준일 {v.source.asOf}
-                              {isOutdated(v) && (
-                                <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 font-medium text-amber-900 dark:bg-amber-900 dark:text-amber-100">
-                                  오래된 자료
-                                </span>
-                              )}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                    {treatyNotApplicable && (
-                      <p className={`flex flex-col text-xs text-zinc-600 dark:text-zinc-400 ${values.length > 0 ? "mt-2" : ""}`}>
-                        <span>{RATE_TYPE_LABELS.treaty}</span>
-                        <span className="text-sm font-medium">해당 없음(기준국)</span>
-                      </p>
-                    )}
-                  </td>
-                );
-              })}
+              {countries.map((country) => (
+                <th
+                  key={country}
+                  scope="col"
+                  className="border-b border-l border-zinc-300 px-4 py-3 font-semibold dark:border-zinc-700"
+                >
+                  {COUNTRY_LABELS[country]}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {items.map((item) => (
+              <tr key={item}>
+                <th
+                  scope="row"
+                  className="border-t border-zinc-300 bg-zinc-50 px-4 py-3 align-top font-medium dark:border-zinc-700 dark:bg-zinc-800/50"
+                >
+                  {ITEM_LABELS[item]}
+                </th>
+                {countries.map((country) => {
+                  const values = getValues(country, item);
+                  // 한국의 조세조약 세율은 기준국이라 만들지 않는다 (원천세율 항목에서만 안내)
+                  const treatyNotApplicable = item !== "corporate" && isNotApplicable(country, "treaty");
+                  return (
+                    <td key={country} className="border-l border-t border-zinc-300 px-4 py-3 align-top dark:border-zinc-700">
+                      {values.length === 0 && !treatyNotApplicable && (
+                        <span className="text-zinc-600 dark:text-zinc-400">해당 자료를 찾지 못했습니다</span>
+                      )}
+                      {hasConflict(values) && (
+                        <p className="mb-2 inline-block rounded bg-red-100 px-1.5 py-0.5 text-xs font-medium text-red-900 dark:bg-red-900 dark:text-red-100">
+                          자료 간 차이 있음
+                        </p>
+                      )}
+                      {values.length > 0 && (
+                        <ul className="flex flex-col gap-2">
+                          {values.map((v) => (
+                            <li key={`${v.rateType}-${v.source.url}`} className="flex flex-col gap-0.5">
+                              <span className="text-xs text-zinc-600 dark:text-zinc-400">{RATE_TYPE_LABELS[v.rateType]}</span>
+                              <span className="text-lg font-semibold">{v.value}%</span>
+                              {/* 출처: 기관명(자료 주소로 연결)과 기준일. 모든 값에 반드시 붙는다 */}
+                              <a
+                                href={v.source.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-blue-700 underline underline-offset-2 dark:text-blue-300"
+                              >
+                                {v.source.org}
+                                <span className="sr-only"> (새 창에서 열림)</span>
+                              </a>
+                              <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                                기준일 {v.source.asOf}
+                                {isOutdated(v) && (
+                                  <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 font-medium text-amber-900 dark:bg-amber-900 dark:text-amber-100">
+                                    오래된 자료
+                                  </span>
+                                )}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                      {treatyNotApplicable && (
+                        <p className={`flex flex-col text-xs text-zinc-600 dark:text-zinc-400 ${values.length > 0 ? "mt-2" : ""}`}>
+                          <span>{RATE_TYPE_LABELS.treaty}</span>
+                          <span className="text-sm font-medium">해당 없음(기준국)</span>
+                        </p>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
