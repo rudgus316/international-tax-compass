@@ -20,6 +20,14 @@ const GENERIC_ERROR: AskResponse = {
 
 const STATUSES: AskStatus[] = ["ok", "no_data", "unsupported", "refused", "blocked", "error"];
 
+// 처음 오신 분이 어떻게 물어보면 되는지 알 수 있게 보여 주는 예시 질문. 모두 정답률 채점(data/eval-questions.json)에서 올바르게 답한 질문이다.
+const EXAMPLE_QUESTIONS = [
+  "미국과 일본의 배당 원천세율 차이는?",
+  "한국 기업이 일본에서 이자를 받으면 조세조약 세율은?",
+  "독일 법인세율과 연대세는 얼마인가요?",
+  "한국 미국 일본의 지방세 포함 법인세율을 비교해줘",
+];
+
 // 서버가 돌려준 값이 약속한 모양인지 확인한다. 아니면 오류로 본다.
 function isAskResponse(value: unknown): value is AskResponse {
   if (typeof value !== "object" || value === null) return false;
@@ -41,6 +49,19 @@ export default function AskSection() {
   const [view, setView] = useState<View>({ kind: "idle" });
   // 질문을 연달아 보냈을 때 늦게 온 옛 답이 새 답을 덮어쓰지 않게 번호를 매긴다
   const requestId = useRef(0);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // 예시 질문을 누르면 질문창에 채우고 바로 고칠 수 있게 커서를 끝에 둔다. 자동으로 보내지는 않는다(의도하지 않은 호출·비용 방지).
+  function fillExample(text: string) {
+    setQuestion(text);
+    setSubmitNotice("");
+    requestAnimationFrame(() => {
+      const box = textareaRef.current;
+      if (!box) return;
+      box.focus();
+      box.setSelectionRange(text.length, text.length);
+    });
+  }
 
   // 입력하는 동안에도 바로 알려 주는 검사 결과
   const piiKinds = detectPii(question);
@@ -94,7 +115,24 @@ export default function AskSection() {
         <label htmlFor="question" className="text-base font-medium">
           궁금한 점을 문장으로 물어보세요
         </label>
+
+        {/* 예시 질문: 누르면 질문창에 채워진다 */}
+        <div role="group" aria-label="예시 질문" className="flex flex-wrap items-center gap-2 break-keep">
+          <span className="text-sm text-zinc-600 dark:text-zinc-400">이렇게 물어보세요</span>
+          {EXAMPLE_QUESTIONS.map((example) => (
+            <button
+              key={example}
+              type="button"
+              onClick={() => fillExample(example)}
+              className="min-h-11 rounded-full border border-blue-200 bg-blue-50 px-4 py-2 text-left text-sm text-blue-900 hover:bg-blue-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-100 dark:hover:bg-blue-900"
+            >
+              {example}
+            </button>
+          ))}
+        </div>
+
         <textarea
+          ref={textareaRef}
           id="question"
           value={question}
           onChange={(event) => {
